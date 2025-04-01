@@ -1,21 +1,22 @@
-body { 
-    font-family: Arial, sans-serif; 
-    margin: 0; 
-    padding: 0; 
-    text-align: center; 
-    background-color: #f4f4f4;
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-color: black;
+    color: white;
 }
 
 h2 {
-    color: #333;
+    color: #00d4ff;
 }
 
-#map { 
-    height: 500px; 
-    width: 80%; 
-    margin: auto; 
-    border-radius: 10px; 
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+#map {
+    height: 500px;
+    width: 80%;
+    margin: auto;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 255, 255, 0.3);
 }
 
 button {
@@ -23,23 +24,25 @@ button {
     padding: 10px 15px;
     font-size: 16px;
     border: none;
-    background-color: #d9534f;
-    color: white;
+    background-color: #00d4ff;
+    color: black;
     cursor: pointer;
     border-radius: 5px;
+    transition: background 0.3s;
 }
 
 button:hover {
-    background-color: #c9302c;
+    background-color: #0091c2;
 }
 
-/* Responsive pentru telefoane */
+/* Responsivitate pentru telefoane */
 @media (max-width: 768px) {
     #map {
         width: 95%;
         height: 400px;
     }
 }
+
 footer {
     font-size: 12px;
     color: gray;
@@ -48,6 +51,6 @@ footer {
     position: fixed;
     bottom: 0;
     width: 100%;
-    background-color: white;
-    border-top: 1px solid #ddd;
+    background-color: black;
+    border-top: 1px solid #00d4ff;
 }
