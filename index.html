@@ -8,24 +8,96 @@
     <!-- Link către stilul Leaflet și fișierul CSS propriu -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script type="module">
+        // Import Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
+        import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            databaseURL: "YOUR_DATABASE_URL",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const db = getDatabase(app);
+        const markersRef = ref(db, 'markers');
+    </script>
 </head>
 <body>
+    <div id="globe-container"></div>
+    <div id="map" style="display: none;"></div>
+    
     <h2>🗺️ CyberPeak - Hartă Interactivă Prioritizată</h2>
     <p>Faceți click pe hartă pentru a adăuga un marker</p>
-    
-    <div id="map"></div>
     
     <!-- Buton pentru ștergerea markerelor -->
     <button onclick="clearMarkers()">🗑️ Șterge toate marcajele</button>
 
     <!-- Scripturile necesare -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="script.js"></script>
-    <footer>
-    <p>© Toate drepturile sunt rezervate echipei noastre. Utilizarea neautorizată a acestui material, inclusiv reproducerea, 
-    distribuirea, afișarea sau transmiterea oricărui conținut, este strict interzisă fără consimțământul expres al echipei 
-    noastre, conform Legii nr. 8/1996 privind dreptul de autor.</p>
-</footer>
+    <script>
+        let scene = new THREE.Scene();
+        let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        let renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.getElementById("globe-container").appendChild(renderer.domElement);
+        
+        let geometry = new THREE.SphereGeometry(5, 32, 32);
+        let texture = new THREE.TextureLoader().load('https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Nasa_blue_marble.jpg/800px-Nasa_blue_marble.jpg');
+        let material = new THREE.MeshBasicMaterial({ map: texture });
+        let earth = new THREE.Mesh(geometry, material);
+        scene.add(earth);
+        
+        camera.position.z = 10;
+        function animate() {
+            requestAnimationFrame(animate);
+            earth.rotation.y += 0.01;
+            renderer.render(scene, camera);
+        }
+        animate();
+        
+        document.body.addEventListener('click', () => {
+            document.getElementById("globe-container").style.display = 'none';
+            document.getElementById('map').style.display = 'block';
+            let map = L.map('map').setView([20, 0], 2);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors'
+            }).addTo(map);
+            
+            const markersRef = firebase.database().ref('markers');
+            markersRef.on('value', (snapshot) => {
+                map.eachLayer((layer) => {
+                    if (layer instanceof L.Marker) {
+                        map.removeLayer(layer);
+                    }
+                });
+                snapshot.forEach((childSnapshot) => {
+                    let markerData = childSnapshot.val();
+                    L.marker([markerData.lat, markerData.lng]).addTo(map);
+                });
+            });
+            
+            map.on('click', function(e) {
+                const newMarkerRef = push(markersRef);
+                set(newMarkerRef, { lat: e.latlng.lat, lng: e.latlng.lng });
+            });
+        });
 
+        function clearMarkers() {
+            const markersRef = firebase.database().ref('markers');
+            remove(markersRef);
+        }
+    </script>
+    <footer>
+        <p>© Toate drepturile sunt rezervate echipei noastre. Utilizarea neautorizată a acestui material, inclusiv reproducerea, 
+        distribuirea, afișarea sau transmiterea oricărui conținut, este strict interzisă fără consimțământul expres al echipei 
+        noastre, conform Legii nr. 8/1996 privind dreptul de autor.</p>
+    </footer>
 </body>
 </html>
