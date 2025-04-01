@@ -8,9 +8,9 @@
     <!-- Link către stilul Leaflet și fișierul CSS propriu -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
     <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    
+    <!-- Firebase -->
     <script type="module">
-        // Import Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
         import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
@@ -23,17 +23,16 @@
             messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
             appId: "YOUR_APP_ID"
         };
-        
+
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
     </script>
 </head>
 <body>
-    <div id="globe-container"></div>
-    <div id="map" style="display: none;"></div>
-    
     <h2>🗺️ CyberPeak - Hartă Interactivă Prioritizată</h2>
     <p>Faceți click pe hartă pentru a adăuga un marker</p>
+    
+    <div id="map"></div>
     
     <!-- Buton pentru ștergerea markerelor -->
     <button id="clearMarkersBtn">🗑️ Șterge toate marcajele</button>
@@ -43,37 +42,15 @@
     <script type="module">
         import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
         
-        let scene = new THREE.Scene();
-        let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        let renderer = new THREE.WebGLRenderer();
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.getElementById("globe-container").appendChild(renderer.domElement);
+        let map = L.map('map').setView([45.9432, 24.9668], 6);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors'
+        }).addTo(map);
         
-        let geometry = new THREE.SphereGeometry(5, 32, 32);
-        let texture = new THREE.TextureLoader().load('https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Nasa_blue_marble.jpg/800px-Nasa_blue_marble.jpg');
-        let material = new THREE.MeshBasicMaterial({ map: texture });
-        let earth = new THREE.Mesh(geometry, material);
-        scene.add(earth);
+        const db = getDatabase();
+        const markersRef = ref(db, 'markers');
         
-        camera.position.z = 10;
-        function animate() {
-            requestAnimationFrame(animate);
-            earth.rotation.y += 0.01;
-            renderer.render(scene, camera);
-        }
-        animate();
-        
-        document.body.addEventListener('click', () => {
-            document.getElementById("globe-container").style.display = 'none';
-            document.getElementById('map').style.display = 'block';
-            let map = L.map('map').setView([20, 0], 2);
-            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-                attribution: '&copy; OpenStreetMap contributors'
-            }).addTo(map);
-            
-            const db = getDatabase();
-            const markersRef = ref(db, 'markers');
-            
+        function loadMarkers() {
             onValue(markersRef, (snapshot) => {
                 map.eachLayer((layer) => {
                     if (layer instanceof L.Marker) {
@@ -85,17 +62,25 @@
                     L.marker([markerData.lat, markerData.lng]).addTo(map);
                 });
             });
-            
-            map.on('click', function(e) {
-                const newMarkerRef = push(markersRef);
-                set(newMarkerRef, { lat: e.latlng.lat, lng: e.latlng.lng });
+        }
+        loadMarkers();
+        
+        map.on('click', function(e) {
+            const newMarkerRef = push(markersRef);
+            set(newMarkerRef, { lat: e.latlng.lat, lng: e.latlng.lng }).then(() => {
+                L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
+            }).catch((error) => {
+                console.error("Eroare la salvarea markerului:", error);
             });
         });
 
         document.getElementById("clearMarkersBtn").addEventListener("click", () => {
-            const db = getDatabase();
-            const markersRef = ref(db, 'markers');
-            remove(markersRef);
+            remove(markersRef).then(() => {
+                alert("Toate marcajele au fost șterse!");
+                location.reload();
+            }).catch((error) => {
+                console.error("Eroare la ștergerea markerelor:", error);
+            });
         });
     </script>
     <footer>
@@ -105,3 +90,4 @@
     </footer>
 </body>
 </html>
+
