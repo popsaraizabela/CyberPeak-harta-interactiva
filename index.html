@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Leaflet Map with CSV</title>
+<head>  
+  <title>Hartă Interactivă</title>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
  
   <!-- Leaflet CSS and JS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="style.css">
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
   <!-- PapaParse CSV Parser -->
@@ -21,7 +22,7 @@
 </head>
 <body>
 
-<h2>CSV Locations on Leaflet Map</h2>
+<h2>🗺️ Hartă Interactivă - Cyberpeak</h2>
 <div id="map"></div>
 
 <script>
@@ -33,6 +34,7 @@
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
 
+  
   // URL of the CSV file on your server
   const csvUrl = 'https://yourserver.com/path/to/locations.csv';
 
