@@ -11,7 +11,7 @@
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 
   <!-- PapaParse CSV Parser -->
-  <script src="https://raw.githubusercontent.com/popsaraizabela/CyberPeak-harta-interactiva/load-locations-from-csv/locations.csv"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
   <style>
     #map {
@@ -36,7 +36,7 @@
 
   
   // URL of the CSV file on your server
-  const csvUrl = 'https://yourserver.com/path/to/locations.csv';
+  const csvUrl = 'https://raw.githubusercontent.com/popsaraizabela/CyberPeak-harta-interactiva/load-locations-from-csv/locations.csv';
 
   // Fetch and parse the CSV
   fetch(csvUrl)
