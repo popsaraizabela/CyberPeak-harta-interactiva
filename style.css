@@ -14,9 +14,29 @@ body {
 
 .info.legend {
   background: white;
-  padding: 10px;
-  line-height: 1.5;
+  padding: 10px 14px;
   font-size: 14px;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.2);
+  border-radius: 8px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.15);
+  font-family: Arial, sans-serif;
+  line-height: 1.6;
+  text-align: left;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.dot {
+  height: 12px;
+  width: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+.dot.red {
+  background-color: #e74c3c;
 }
