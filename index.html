@@ -1,18 +1,70 @@
 <!DOCTYPE html>
-<html lang="ro">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hartă Interactivă</title>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link rel="stylesheet" href="style.css">
+  <title>Leaflet Map with CSV</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ 
+  <!-- Leaflet CSS and JS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+
+  <!-- PapaParse CSV Parser -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+
+  <style>
+    #map {
+      height: 600px;
+      width: 100%;
+    }
+  </style>
 </head>
 <body>
-    <h2>🗺️ Hartă Interactivă</h2>
-    <p>Faceți click pe hartă pentru a adăuga un marker</p>
-    <div id="map"></div>
-    <button onclick="clearMarkers()">🗑️ Șterge toate marcajele</button>
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script src="script.js"></script>
+
+<h2>CSV Locations on Leaflet Map</h2>
+<div id="map"></div>
+
+<script>
+  // Initialize the map
+  const map = L.map('map').setView([45.76, 21.23], 6); // Center map as needed
+
+  // Load tile layer (OpenStreetMap)
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; OpenStreetMap contributors'
+  }).addTo(map);
+
+  // URL of the CSV file on your server
+  const csvUrl = 'https://yourserver.com/path/to/locations.csv';
+
+  // Fetch and parse the CSV
+  fetch(csvUrl)
+    .then(response => response.text())
+    .then(csvText => {
+      Papa.parse(csvText, {
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+          const data = results.data;
+
+          data.forEach(row => {
+            const lat = parseFloat(row.latitude);
+            const lng = parseFloat(row.longitude);
+            const name = row.name || 'Unnamed Location';
+
+            if (!isNaN(lat) && !isNaN(lng)) {
+              L.marker([lat, lng])
+                .addTo(map)
+                .bindPopup(`<strong>${name}</strong>`);
+            }
+          });
+        }
+      });
+    })
+    .catch(error => {
+      console.error('Error fetching or parsing the CSV:', error);
+    });
+</script>
+
 </body>
 </html>
+
