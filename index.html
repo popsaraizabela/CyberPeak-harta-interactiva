@@ -26,6 +26,34 @@
 <div id="map"></div>
 
 <script>
+  // icons :
+  const icons = {
+    ok: L.icon({
+      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-shadow.png',
+      shadowSize: [41, 41]
+    }),
+    warning: L.icon({
+      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-shadow.png',
+      shadowSize: [41, 41]
+    }),
+    bad: L.icon({
+      iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+      iconSize: [25, 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      shadowUrl: 'https://unpkg.com/leaflet@1.9.3/dist/images/marker-shadow.png',
+      shadowSize: [41, 41]
+    })
+  };
+  
   // Initialize the map
   const map = L.map('map').setView([45.76, 21.23], 6); // Center map as needed
 
@@ -33,6 +61,21 @@
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; OpenStreetMap contributors'
   }).addTo(map);
+
+  const legend = L.control({ position: 'bottomright' });
+
+  legend.onAdd = function (map) {
+    const div = L.DomUtil.create('div', 'info legend');
+    div.innerHTML = `
+      <strong>Severity</strong><br>
+      <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png" /> 🔴 - Bad<br>
+      <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-yellow.png" /> 🟡 - Pretty Bad<br>
+      <img src="https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-green.png" /> 🟢 - OK<br>
+    `;
+    return div;
+  };
+  
+  legend.addTo(map);
 
   
   // URL of the CSV file on your server
@@ -52,11 +95,13 @@
             const lat = parseFloat(row.latitude);
             const lng = parseFloat(row.longitude);
             const name = row.name || 'Unnamed Location';
+            const severity = (row.severity || '').toLowerCase();
+            const icon  = icons[severity] || icons['ok'];
 
             if (!isNaN(lat) && !isNaN(lng)) {
-              L.marker([lat, lng])
+              L.marker([lat, lng], { icon : icon})
                 .addTo(map)
-                .bindPopup(`<strong>${name}</strong>`);
+                .bindPopup(`<strong>${name}</strong><br>Severity:${severity}`);
             }
           });
         }
