@@ -4,14 +4,28 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Transformare Logo în Hartă</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    <style>
+        body { text-align: center; background: black; color: white; }
+        #logo {
+            width: 150px;
+            height: 150px;
+            background-image: url('logo.png'); /* Înlocuiește cu logo-ul tău */
+            background-size: cover;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            animation: grow 3s forwards;
+        }
+
+        @keyframes grow {
+            0% { width: 150px; height: 150px; }
+            50% { width: 300px; height: 300px; background-image: url('earth.png'); } /* Imaginea Pământului */
+            100% { width: 100vw; height: 100vh; background-image: url('map.png'); } /* Imaginea hărții */
+        }
+    </style>
 </head>
 <body>
-    <div id="container"></div>
-    <div id="map"></div>
-    <script src="script.js"></script>
+    <div id="logo"></div>
 </body>
 </html>
