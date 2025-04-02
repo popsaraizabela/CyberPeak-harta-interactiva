@@ -1,3 +1,4 @@
+
 // Inițializare hartă
 var map = L.map('map').setView([45.9432, 24.9668], 6); // Centrat pe România
 
