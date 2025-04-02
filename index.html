@@ -3,91 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CyberPeak</title>
-    
-    <!-- Link către stilul Leaflet și fișierul CSS propriu -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <title>Transformare Logo în Hartă</title>
     <link rel="stylesheet" href="style.css">
-    
-    <!-- Firebase -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js";
-        import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-
-        const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            databaseURL: "YOUR_DATABASE_URL",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 </head>
 <body>
-    <h2>🗺️ CyberPeak - Hartă Interactivă Prioritizată</h2>
-    <p>Faceți click pe hartă pentru a adăuga un marker</p>
-    
+    <div id="container"></div>
     <div id="map"></div>
-    
-    <!-- Buton pentru ștergerea markerelor -->
-    <button id="clearMarkersBtn">🗑️ Șterge toate marcajele</button>
-
-    <!-- Scripturile necesare -->
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script type="module">
-        import { getDatabase, ref, set, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
-        
-        let map = L.map('map').setView([45.9432, 24.9668], 6);
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
-        
-        const db = getDatabase();
-        const markersRef = ref(db, 'markers');
-        
-        function loadMarkers() {
-            onValue(markersRef, (snapshot) => {
-                map.eachLayer((layer) => {
-                    if (layer instanceof L.Marker) {
-                        map.removeLayer(layer);
-                    }
-                });
-                snapshot.forEach((childSnapshot) => {
-                    let markerData = childSnapshot.val();
-                    L.marker([markerData.lat, markerData.lng]).addTo(map);
-                });
-            });
-        }
-        loadMarkers();
-        
-        map.on('click', function(e) {
-            const newMarkerRef = push(markersRef);
-            set(newMarkerRef, { lat: e.latlng.lat, lng: e.latlng.lng }).then(() => {
-                L.marker([e.latlng.lat, e.latlng.lng]).addTo(map);
-            }).catch((error) => {
-                console.error("Eroare la salvarea markerului:", error);
-            });
-        });
-
-        document.getElementById("clearMarkersBtn").addEventListener("click", () => {
-            remove(markersRef).then(() => {
-                alert("Toate marcajele au fost șterse!");
-                location.reload();
-            }).catch((error) => {
-                console.error("Eroare la ștergerea markerelor:", error);
-            });
-        });
-    </script>
-    <footer>
-        <p>© Toate drepturile sunt rezervate echipei noastre. Utilizarea neautorizată a acestui material, inclusiv reproducerea, 
-        distribuirea, afișarea sau transmiterea oricărui conținut, este strict interzisă fără consimțământul expres al echipei 
-        noastre, conform Legii nr. 8/1996 privind dreptul de autor.</p>
-    </footer>
+    <script src="script.js"></script>
 </body>
 </html>
-
