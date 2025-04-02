@@ -1,15 +1,18 @@
 let scene = new THREE.Scene();
 let camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 let renderer = new THREE.WebGLRenderer({ alpha: true });
-renderer.setSize(300, 300);
-document.getElementById("container").appendChild(renderer.domElement);
+renderer.setSize(window.innerWidth, window.innerHeight);
+
+window.onload = () => {
+    document.getElementById("container").appendChild(renderer.domElement);
+};
 
 let geometry = new THREE.SphereGeometry(1, 32, 32);
-let texture = new THREE.TextureLoader().load('earth.jpg');
+let texture = new THREE.TextureLoader().load('https://upload.wikimedia.org/wikipedia/commons/8/80/Earth_Western_Hemisphere_transparent_background.png');
 let material = new THREE.MeshBasicMaterial({ map: texture });
 let sphere = new THREE.Mesh(geometry, material);
 scene.add(sphere);
-camera.position.z = 3;
+camera.position.z = 2.5;
 
 function animate() {
     requestAnimationFrame(animate);
