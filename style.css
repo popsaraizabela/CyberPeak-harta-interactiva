@@ -1,23 +1,8 @@
 body {
-    text-align: center;
-    background: black;
-    color: white;
     margin: 0;
     overflow: hidden;
+    background-color: black;
 }
-
-#container {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
-
-#map {
-    width: 100vw;
-    height: 100vh;
-    display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
+canvas {
+    display: block;
 }
