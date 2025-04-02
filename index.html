@@ -68,9 +68,9 @@
     const div = L.DomUtil.create('div', 'info legend');
     div.innerHTML = `
       <strong>Severity</strong><br>
-       🔴 - Bad<br>
-       🟡 - Pretty Bad<br>
-       🟢 - OK<br>
+        <div class="legend-item"><span class="dot red"></span> Bad</div>
+        <div class="legend-item"><span class="dot yellow"></span> Pretty Bad</div>
+        <div class="legend-item"><span class="dot green"></span> OK</div>
     `;
     return div;
   };
