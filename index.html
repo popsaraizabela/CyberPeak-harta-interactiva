@@ -65,7 +65,7 @@
   const legend = L.control({ position: 'bottomright' });
 
   legend.onAdd = function (map) {
-    const div = L.DomUtil.create('div', 'info legend');
+    const div = L.DomUtil.create('div', 'info-legend');
     div.innerHTML = `
       <strong>Severity</strong><br>
         <div class="legend-item"><span class="dot red"></span> Bad</div>
