@@ -1,4 +1,5 @@
-name,latitude,longitude
-Location A,45.7489,21.2087
-Location B,44.4268,26.1025
-Location C,46.7712,23.6236
+name,severity,latitude,longitude
+Location A,1,45.7489,21.2087
+Location B,2,44.4268,26.1025
+Location C,1,46.7712,23.6236
+c.d.loga,3,45.752914041430714,21.23461317559228
