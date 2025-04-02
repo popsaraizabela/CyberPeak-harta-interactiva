@@ -6,6 +6,10 @@
     border-radius: 8px;
 }
 
+.title {
+  color: white;
+}
+
 body {
     font-family: Arial, sans-serif;
     text-align: center;
