@@ -1,17 +1,49 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ro">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terra Animată & Hartă Interactivă</title>
-    <link rel="stylesheet" href="style.css">
+    <title>Transformare Terra în Hartă</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
 </head>
-<body>
-    <div id="container"></div>
-    <div id="map"></div>
-    <script src="script.js"></script>
+<body style="margin: 0; overflow: hidden;">
+    <canvas id="scene"></canvas>
+    <script>
+        // Inițializare Three.js
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ canvas: document.getElementById('scene') });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Crearea sferei Pământului
+        const geometry = new THREE.SphereGeometry(2, 32, 32);
+        const textureLoader = new THREE.TextureLoader();
+        const material = new THREE.MeshBasicMaterial({
+            map: textureLoader.load('earth_texture.jpg') // Adaugă o textură de Pământ
+        });
+        const earth = new THREE.Mesh(geometry, material);
+        scene.add(earth);
+
+        // Poziționarea camerei
+        camera.position.z = 5;
+
+        // Animația de rotație și mărire
+        let scale = 1;
+        function animate() {
+            requestAnimationFrame(animate);
+            earth.rotation.y += 0.01; // Rotația Terrei
+            if (scale < 10) { // Mărirea progresivă
+                earth.scale.set(scale, scale, scale);
+                scale += 0.02;
+            } else {
+                // Schimbare în hartă după ce se mărește complet
+                earth.material.map = textureLoader.load('map_texture.jpg'); 
+            }
+            renderer.render(scene, camera);
+        }
+
+        animate();
+    </script>
 </body>
 </html>
