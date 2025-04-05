@@ -1,1 +1,108 @@
-
+////images
+//#include<iostream>
+//#include<opencv2/imgcodecs.hpp>
+//#include<opencv2/highgui.hpp>
+//#include<opencv2/imgproc.hpp>
+//using namespace std;
+//using namespace cv;
+//int main()
+//{
+//	string path ="C:/Users/HP ULTRABOOK/OneDrive/Desktop/CyberPeak/Cyberpeak/Resources/test.png";
+//		Mat image = imread(path);
+//		imshow("Image", image);
+//		waitKey(0);
+//   return 0;
+//}
+//Videos
+#include<opencv2/imgcodecs.hpp>
+#include<opencv2/highgui.hpp>
+#include<opencv2/imgproc.hpp>
+#include<iostream>
+using namespace std;
+using namespace cv;
+int main()
+{
+	string path = "C:/Users/HP ULTRABOOK/OneDrive/Desktop/CyberPeak/Cyberpeak/OpenCV/Resources/Resources/test_video.mp4";
+	VideoCapture cap(path);
+	Mat image = imread(path);
+	while (true) {
+		cap.read(image);
+        waitKey(25);
+	}
+	return 0;
+}
+//Webcam 
+//#include<opencv2/imgcodecs.hpp>
+//#include<opencv2/highgui.hpp>
+//#include<opencv2/imgproc.hpp>
+//#include<iostream>
+//using namespace std;
+//using namespace cv;
+//int main()
+//{
+//	VideoCapture video(0);
+//	if (!video.isOpened())
+//		return -1;
+//	Mat frame;
+//	while (video.read(frame)) {
+//		imshow("Webcam", frame);
+//		if (waitKey(25) >= 0) {
+//			break;
+//		}
+//	}
+//	return 0;
+//}
+////////Webcam writer
+////#include<opencv2/imgcodecs.hpp>
+////#include<opencv2/highgui.hpp>
+////#include<opencv2/imgproc.hpp>
+////#include<iostream>
+////using namespace std;
+////using namespace cv;
+////int main()
+////{
+////	VideoCapture video(0);
+////	if (!video.isOpened())
+////		return -1;
+////	Mat frame;
+////	int framewidth = video.get(CAP_PROP_FRAME_WIDTH);
+////	int frameheight = video.get(CAP_PROP_FRAME_HEIGHT);
+////	VideoWriter output("output.avi", VideoWriter::fourcc('M', 'J', 'P', 'G'), 30, Size(framewidth, frameheight));
+////	while (video.read(frame)) {
+////		imshow("Webcam writer", frame);
+////		output.write(frame);
+////	if (waitKey(25) >= 0)
+////		break;
+////      }
+////	output.release();
+////	video.release();
+////	destroyAllWindows();
+////return 0;
+}
+//Basic functions
+#include<iostream>
+#include<opencv2/highgui.hpp>
+#include<opencv2/imgproc.hpp>
+#include<opencv2/imgcodecs.hpp>
+using namespace cv;
+using namespace std;
+int  main()
+{
+	string path = "C:/Users/HP ULTRABOOK/OneDrive/Desktop/CyberPeak/Cyberpeak/Resources/test.png";
+	Mat image = imread(path);
+	Mat imggray, imgblur, imgcanny, imgdil, imgerode;
+	Mat kernel = getStructuringElement(MORPH_RECT, Size(5, 5));
+	imshow("image", image);
+	cvtColor(image, imggray, COLOR_BGR2GRAY);
+	GaussianBlur(image, imgblur,Size(7,7),5,0);
+	Canny(imgblur, imgcanny, 25, 75);
+	dilate(imgcanny, imgdil, kernel);
+	erode(imgdil, imgerode, kernel);
+	imshow("image gray" , imggray);
+	imshow("image blur", imgblur);
+	imshow("image canny", imgcanny);
+	imshow("image dilation", imgdil);
+	imshow("image erode", imgerode);
+	waitKey(0);
+	return 0;
+}
